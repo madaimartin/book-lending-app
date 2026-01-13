@@ -43,6 +43,6 @@ public class AuthController {
 
     @ModelAttribute("userForm")
     public UserRegisterDto userForm() {
-        return new UserRegisterDto(null, null, null, null);
+        return UserRegisterDto.builder().build();
     }
 }

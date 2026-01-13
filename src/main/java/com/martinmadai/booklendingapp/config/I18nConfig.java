@@ -24,14 +24,7 @@ public class I18nConfig {
         source.setFallbackToSystemLocale(false);
         return source;
     }
-/*
-    @Bean
-    public LocaleResolver localeResolver() {
-        SessionLocaleResolver resolver = new SessionLocaleResolver();
-        resolver.setDefaultLocale(Locale.ENGLISH);
-        return resolver;
-    }
-*/
+
     @Bean
     public LocaleResolver localeResolver() {
         CookieLocaleResolver resolver = new CookieLocaleResolver();

@@ -36,7 +36,6 @@ public class SecurityConfig {
 
                         .anyRequest().authenticated()
                 )
-                //.userDetailsService(userDetailsService)
                 .formLogin(form -> form
                         .loginPage("/login")
                         .usernameParameter("username")
