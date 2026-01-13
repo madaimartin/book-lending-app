@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/layout :: layout(
+            ~{layout/admin-layout :: adminLayout(~{::section}, #{title.admin.books})},
+            #{title.admin.books}
+      )}">
+<body>
+<section>
+    <h3 th:text="#{title.admin.books}">Book</h3>
+
+    <form th:action="@{/books/save}"
+          th:object="${bookForm}"
+          method="post"
+          class="card card-body shadow-sm">
+
+    <input type="hidden" th:field="*{id}"/>
+
+    <div class="row">
+        <div class="mb-3">
+                <label class="form-label required" th:text="#{book.label.title}">Title</label>
+                <input class="form-control"
+                       th:field="*{title}"
+                       th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'"/>
+                <div class="invalid-feedback" th:errors="*{title}"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="mb-3">
+            <label class="form-label required" th:text="#{book.label.author}">Author</label>
+            <input class="form-control"
+                   th:field="*{author}"
+                   th:classappend="${#fields.hasErrors('author')} ? 'is-invalid'"/>
+            <div class="invalid-feedback" th:errors="*{author}"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="mb-3 col-md-6">
+            <label class="form-label required" th:text="#{book.label.isbn}">ISBN</label>
+            <input class="form-control"
+                   th:field="*{isbn}"
+                   th:classappend="${#fields.hasErrors('isbn')} ? 'is-invalid'"
+                   th:readonly="${bookForm.id != null}"/>
+            <div class="invalid-feedback" th:errors="*{isbn}"></div>
+        </div>
+
+        <div class="mb-3 col-md-6">
+            <label class="form-label required" th:text="#{book.label.publisher}">Publisher</label>
+            <input class="form-control"
+                   th:field="*{publisher}"
+                   th:classappend="${#fields.hasErrors('publisher')} ? 'is-invalid'"/>
+            <div class="invalid-feedback" th:errors="*{publisher}"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="mb-3 col-md-6">
+            <label class="form-label required" th:text="#{book.label.publishedYear}">Published Year</label>
+
+            <input class="form-control form-control-sm"
+                   type="number"
+                   th:field="*{publishedYear}"
+                   th:classappend="${#fields.hasErrors('publishedYear')} ? 'is-invalid'"
+                   style="max-width: 120px"
+                   step="1"
+                   inputmode="numeric"
+                   pattern="[0-9]*"
+                   autocomplete="off">
+
+            <div class="invalid-feedback"
+                 th:if="${#fields.hasErrors('publishedYear')}"
+                 th:errors="*{publishedYear}">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="mb-3">
+            <label class="form-label required" th:text="#{book.label.categories}">Categories</label>
+            <div class="row">
+                <div th:each="c : ${categories}" class="col-6">
+                    <input class="form-check-input" type="checkbox"
+                           th:value="${c.id}"
+                           th:field="*{categoryIds}"
+                           th:id="${'cat_' + c.id}"
+                           th:classappend="${#fields.hasErrors('categoryIds')} ? 'is-invalid'">
+                    <label class="form-check-label"
+                           th:for="${'cat_' + c.id}"
+                           th:text="${#messages.msgOrNull('book.category.' + c.code) ?: c.code}" />
+                </div>
+            </div>
+            <div class="invalid-feedback d-block"
+                    th:if="${#fields.hasErrors('categoryIds')}"
+                    th:errors="*{categoryIds}">
+            </div>
+        </div>
+    </div>
+
+        <div class="mt-3">
+            <button class="btn btn-dark btn-sm" type="submit" th:text="#{action.save}">Save</button>
+            <a th:href="@{/books}" class="btn btn-outline-secondary btn-sm ms-2" th:text="#{action.cancel}">Cancel</a>
+        </div>
+    </form>
+</section>
+</body>
+</html>

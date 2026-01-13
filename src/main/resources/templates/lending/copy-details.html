@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/layout :: layout(
+            ~{::section},
+            #{title.copy.details}
+      )}">
+<body>
+<section class="container">
+
+    <div th:if="${successMessage}"
+         class="alert alert-success alert-dismissible fade show"
+         role="alert">
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <h3 class="mb-4" th:text="#{title.copy.details}">Book Copy Details</h3>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <dl class="row mb-0">
+
+                <dt class="col-sm-3" th:text="#{book.label.title}">Title</dt>
+                <dd class="col-sm-9" th:text="${copy.title}"></dd>
+
+                <dt class="col-sm-3" th:text="#{book.label.author}">Author</dt>
+                <dd class="col-sm-9" th:text="${copy.author}"></dd>
+
+                <dt class="col-sm-3" th:text="#{book.label.publisher}">Publisher</dt>
+                <dd class="col-sm-9" th:text="${copy.publisher}"></dd>
+
+                <dt class="col-sm-3" th:text="#{book.label.isbn}">ISBN</dt>
+                <dd class="col-sm-9" th:text="${copy.isbn}"></dd>
+
+                <dt class="col-sm-3" th:text="#{book.label.publishedYear}">Published</dt>
+                <dd class="col-sm-9" th:text="${copy.publishedYear}"></dd>
+
+                <dt class="col-sm-3" th:text="#{book.label.categories}">Categories</dt>
+                <dd class="col-sm-9">
+                    <span th:each="cat, iter : ${copy.categoryCodes}">
+                        <span th:text="${#messages.msgOrNull('book.category.' + cat) ?: cat}"></span>
+                        <span th:if="${!iter.last}">, </span>
+                    </span>
+                </dd>
+
+                <hr/>
+
+                <dt class="col-sm-3" th:text="#{copy.label.barcode}">Barcode</dt>
+                <dd class="col-sm-9" th:text="${copy.barcode}"></dd>
+
+                <dt class="col-sm-3" th:text="#{copy.label.acquisitionDate}">Acquired</dt>
+                <dd class="col-sm-9"
+                    th:text="${#temporals.format(copy.acquisitionDate, 'yyyy-MM-dd')}">
+                </dd>
+
+                <dt class="col-sm-3" th:text="#{copy.label.condition}">Condition</dt>
+                <dd class="col-sm-9"
+                    th:text="${#messages.msgOrNull('book.condition.' + copy.conditionCode) ?: copy.conditionCode}">
+                </dd>
+
+                <dt class="col-sm-3" th:text="#{copy.label.status}">Status</dt>
+                <dd class="col-sm-9"
+                    th:text="${#messages.msgOrNull('book.status.' + copy.status) ?: copy.status}">
+                </dd>
+
+                <dt class="col-sm-3" th:text="#{copy.label.notes}">Notes</dt>
+                <dd class="col-sm-9" th:text="${copy.notes ?: '-'}"></dd>
+
+            </dl>
+        </div>
+
+        <div class="mt-4 d-flex justify-content-center gap-3">
+            <a th:href="@{/bookcopies/search}"
+               class="btn btn-outline-secondary btn-lg px-4">
+                <i class="bi bi-arrow-left"></i>
+                <span th:text="#{action.back}">Back</span>
+            </a>
+
+            <form th:action="@{/bookcopies/{id}/loan(id=${copy.id})}"
+                  method="post"
+                  th:if="${copy.status == 'AVAILABLE'}">
+                <button class="btn btn-dark btn-lg px-5">
+                    <i class="bi bi-book"></i>
+                    <span th:text="#{action.loan}">Loan</span>
+                </button>
+            </form>
+            <button class="btn btn-secondary btn-lg px-5" disabled
+                    th:if="${copy.status != 'AVAILABLE'}">
+                <span th:text="#{action.not.available}">Not available</span>
+            </button>
+        </div>
+    </div>
+
+</section>
+</body>
+</html>

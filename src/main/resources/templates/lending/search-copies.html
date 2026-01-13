@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/layout :: layout(~{::section}, #{title.search.book.copies})}">
+<body>
+<section>
+    <h3 th:text="#{title.search.book.copies}">Book</h3>
+
+    <form th:action="@{/bookcopies/search}"
+          th:object="${searchForm}"
+          method="post"
+          class="card card-body shadow-sm mb-4">
+
+        <div class="alert alert-warning"
+             th:if="${#fields.hasGlobalErrors()}"
+             th:each="err : ${#fields.globalErrors()}"
+             th:text="${err}">
+        </div>
+
+        <div class="row g-3">
+
+            <div class="col-md-6">
+                <label class="form-label" th:text="#{book.label.title}">Title</label>
+                <input class="form-control" th:field="*{title}">
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label" th:text="#{book.label.author}">Author</label>
+                <input class="form-control" th:field="*{author}">
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label" th:text="#{book.label.publisher}">Publisher</label>
+                <input class="form-control" th:field="*{publisher}">
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label" th:text="#{book.label.categories}">Categories</label>
+                <select class="form-select" th:field="*{categoryId}">
+                    <option value="">--</option>
+                    <option th:each="c : ${categories}"
+                            th:value="${c.id}"
+                            th:text="${#messages.msgOrNull('book.category.' + c.code) ?: c.code}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label" th:text="#{copy.label.status}">Status</label>
+                <select class="form-select" th:field="*{status}">
+                    <option value="">--</option>
+                    <option th:each="s : ${statuses}"
+                            th:value="${s}"
+                            th:text="${#messages.msgOrNull('book.status.' + s.code) ?: s}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label" th:text="#{copy.label.condition}">Condition</label>
+                <select class="form-select" th:field="*{conditionId}">
+                    <option value="">--</option>
+                    <option th:each="c : ${conditions}"
+                            th:value="${c.id}"
+                            th:text="${#messages.msgOrNull('book.condition.' + c.code) ?: c.code}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label" th:text="#{copy.label.barcode}">Barcode</label>
+                <input class="form-control" th:field="*{barcode}">
+            </div>
+
+        </div>
+
+        <div class="mt-4 text-center">
+            <button class="btn btn-dark btn-lg px-5"
+                    type="submit"
+                    th:text="#{action.search}">
+                Search
+            </button>
+        </div>
+    </form>
+
+    <div th:if="${results != null}" class="mt-4">
+
+        <h5 th:text="#{label.search.results}">Results</h5>
+
+        <div th:if="${#lists.isEmpty(results)}"
+             class="alert alert-warning"
+             th:text="#{label.search.no.results}">
+            No results found
+        </div>
+
+        <div th:unless="${#lists.isEmpty(results)}"
+             class="table-responsive">
+
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                <tr>
+                    <th th:text="#{book.label.title}">Title</th>
+                    <th th:text="#{book.label.author}">Author</th>
+                    <th th:text="#{copy.label.barcode}">Barcode</th>
+                    <th th:text="#{copy.label.status}">Status</th>
+                    <th th:text="#{copy.label.condition}">Condition</th>
+                    <th></th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="c : ${results}">
+                    <td th:text="${c.book.title}"></td>
+                    <td th:text="${c.book.author}"></td>
+                    <td th:text="${c.barcode}"></td>
+                    <td th:text="${#messages.msgOrNull('book.status.' + c.status.name) ?: c.status.name}"></td>
+                    <td th:text="${#messages.msgOrNull('book.condition.' + c.condition.code) ?: c.condition.code}"></td>
+                    <td class="text-end">
+                        <a th:href="@{/bookcopies/{id}(id=${c.id})}"
+                           class="btn btn-outline-primary btn-sm"
+                           th:text="#{action.view}">
+                            View
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+</body>
+</html>

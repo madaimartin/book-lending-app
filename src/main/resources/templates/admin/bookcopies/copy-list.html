@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/layout :: layout(
+            ~{layout/admin-layout :: adminLayout(~{::section}, #{title.admin.bookcopies})},
+            #{title.admin.bookcopies}
+      )}">
+<body>
+<section>
+    <h3 th:text="#{title.admin.bookcopies}">Book Copies</h3>
+    <a
+            th:href="@{/bookcopies/new}"
+            class="btn btn-primary mb-3"
+            th:text="#{action.add.copy}">Add Book Copy</a>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th th:text="#{book.label.title}">Title</th>
+            <th th:text="#{book.label.author}">Author</th>
+            <th th:text="#{book.label.isbn}">ISBN</th>
+            <th th:text="#{copy.label.barcode}">Barcode</th>
+            <th th:text="#{copy.label.condition}">Condition</th>
+            <th th:text="#{copy.label.status}">Status</th>
+            <th th:text="#{label.actions}">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="copy : ${copies}">
+            <td th:text="${copy.title}"></td>
+            <td th:text="${copy.author}"></td>
+            <td th:text="${copy.isbn}"></td>
+            <td th:text="${copy.barcode}"></td>
+            <td th:text="${copy.condition}"></td>
+            <td th:text="${copy.status}"></td>
+            <td>
+                <a th:href="@{/bookcopies/{id}/edit(id=${copy.id})}"
+                   class="btn btn-sm btn-outline-primary"
+                   th:text="#{action.edit}">Edit</a>
+                <form th:action="@{/bookcopies/{id}/delete(id=${copy.id})}" method="post" class="d-inline">
+                    <!--<button class="btn btn-sm btn-outline-danger">Delete</button>-->
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+</body>
+</html>

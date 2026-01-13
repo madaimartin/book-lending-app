@@ -1,0 +1,72 @@
+<nav xmlns:th="http://www.thymeleaf.org"
+     th:fragment="navbar"
+     class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+
+    <div class="container">
+
+        <a class="navbar-brand" th:href="@{/}"
+           th:text="#{app.title.short}">
+            BookLending
+        </a>
+
+
+        <!-- LEFT ALIGNED -->
+        <ul class="navbar-nav me-auto align-items-center">
+            <!-- ADMIN MENU -->
+            <li class="nav-item" th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+                <a class="nav-link" th:href="@{/admin}" th:text="#{title.administration}">
+                    Admin
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/bookcopies/search}" th:text="#{title.search.book.copies}">
+                    Search Book Copies
+                </a>
+            </li>
+        </ul>
+
+        <!-- RIGHT ALIGNED -->
+        <ul class="navbar-nav ms-auto align-items-center">
+
+            <!-- MY LOANS -->
+            <li class="nav-item"
+                th:if="${#authorization.expression('isAuthenticated()')}">
+                <a class="nav-link me-3"
+                   th:href="@{/loans/my}"
+                   th:text="#{title.my.loans}">
+                    My Loans
+                </a>
+            </li>
+
+            <!-- USERNAME -->
+            <li class="nav-item" th:if="${#authorization.expression('isAuthenticated()')}">
+                <span class="navbar-text me-3" th:text="${#authentication.name}"></span>
+            </li>
+
+            <!-- LOGOUT -->
+            <li class="nav-item" th:if="${#authorization.expression('isAuthenticated()')}">
+                <form th:action="@{/logout}" method="post">
+                    <button class="btn btn-outline-light btn-sm" th:text="#{home.logout}">
+                        Logout
+                    </button>
+                </form>
+            </li>
+
+            <!-- LANGUAGE SWITCH -->
+            <li class="nav-item dropdown ms-3">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                    🌐
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a class="dropdown-item" th:href="@{''(lang='en')}">English</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" th:href="@{''(lang='hu')}">Magyar</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/layout :: layout(
+            ~{layout/admin-layout :: adminLayout(~{::section}, #{title.admin.bookcopies})},
+            #{title.admin.bookcopies}
+      )}">
+<body>
+<section>
+    <h3 th:text="#{title.admin.bookcopies}">Book Copies</h3>
+
+    <form th:action="@{/bookcopies/save}"
+          th:object="${copyForm}"
+          method="post"
+          class="card card-body shadow-sm">
+
+    <input type="hidden" th:field="*{id}"/>
+
+        <!-- Book -->
+        <div class="row">
+            <div class="mb-3">
+                <label class="form-label required" th:text="#{copy.label.book}">Book</label>
+                <select class="form-select"
+                        th:field="*{bookId}"
+                        th:classappend="${#fields.hasErrors('bookId')} ? 'is-invalid'">
+                    <option value="" selected>--</option>
+                    <option th:each="b : ${books}"
+                            th:value="${b.id}"
+                            th:text="${b.author + ' - ' + b.title}">
+                    </option>
+                </select>
+                <div class="invalid-feedback" th:errors="*{bookId}"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Barcode -->
+            <div class="mb-3 col-md-6">
+                <label class="form-label required" th:text="#{copy.label.barcode}">Barcode</label>
+                <input class="form-control"
+                       th:field="*{barcode}"
+                       th:classappend="${#fields.hasErrors('barcode')} ? 'is-invalid'"/>
+                <div class="invalid-feedback" th:errors="*{barcode}"></div>
+            </div>
+
+            <!-- Acquisition date -->
+            <div class="mb-3 col-md-6">
+                <label class="form-label required" th:text="#{copy.label.acquisitionDate}">Acquisition date</label>
+                <input type="date"
+                       class="form-control"
+                       th:field="*{acquisitionDate}"
+                       th:classappend="${#fields.hasErrors('acquisitionDate')} ? 'is-invalid'"/>
+                <div class="invalid-feedback" th:errors="*{acquisitionDate}"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Condition -->
+            <div class="mb-3 col-md-6">
+                <label class="form-label required" th:text="#{copy.label.condition}">Condition</label>
+                <select class="form-select"
+                        th:field="*{conditionId}"
+                        th:classappend="${#fields.hasErrors('conditionId')} ? 'is-invalid'">
+                    <option value="" selected>--</option>
+                    <option th:each="c : ${conditions}"
+                            th:value="${c.id}"
+                            th:text="${#messages.msgOrNull('book.condition.' + c.code) ?: c.code}">
+                    </option>
+                </select>
+                <div class="invalid-feedback" th:errors="*{conditionId}"></div>
+            </div>
+
+
+            <!-- Status -->
+            <div class="mb-3 col-md-6">
+                <label class="form-label required" th:text="#{copy.label.status}">Status</label>
+                <select class="form-select"
+                        th:field="*{status}"
+                        th:classappend="${#fields.hasErrors('status')} ? 'is-invalid'">
+                    <option value="" selected>--</option>
+                    <option th:each="s : ${statuses}"
+                            th:value="${s}"
+                            th:text="${#messages.msgOrNull('book.status.' + s.name()) ?: s.name()}">
+                    </option>
+                </select>
+                <div class="invalid-feedback" th:errors="*{status}"></div>
+            </div>
+        </div>
+
+        <!-- Notes -->
+        <div class="row">
+            <div class="mb-3">
+                <label class="form-label" th:text="#{copy.label.notes}">Notes</label>
+                <textarea class="form-control"
+                          rows="3"
+                          th:field="*{notes}"
+                          th:classappend="${#fields.hasErrors('notes')} ? 'is-invalid'">
+                </textarea>
+                <div class="invalid-feedback" th:errors="*{notes}"></div>
+            </div>
+        </div>
+
+        <!-- Action buttons -->
+        <div class="mt-3">
+            <button class="btn btn-dark btn-sm" type="submit" th:text="#{action.save}">Save</button>
+            <a th:href="@{/bookcopies}"
+               class="btn btn-outline-secondary btn-sm ms-2"
+               th:text="#{action.cancel}">Cancel</a>
+        </div>
+    </form>
+</section>
+</body>
+</html>

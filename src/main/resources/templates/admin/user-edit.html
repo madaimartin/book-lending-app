@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/layout :: layout(
+            ~{layout/admin-layout :: adminLayout(~{::section}, #{title.edit.user})},
+            #{title.edit.user}
+      )}">
+<body>
+
+<section>
+
+    <h3 class="mb-4" th:text="#{title.edit.user}">Edit User</h3>
+
+    <form th:action="@{/admin/users/{id}/edit(id=${userForm.id})}"
+          th:object="${userForm}"
+          method="post"
+          class="card card-body shadow-sm">
+
+        <div th:if="${flashError}"
+             class="alert alert-danger"
+             th:text="#{${flashError}}">
+        </div>
+
+        <div th:if="${flashMessage}"
+             class="alert alert-success"
+             th:text="#{${flashMessage}}">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" th:text="#{user.label.username}">Username</label>
+            <input class="form-control input-readonly"
+                   th:field="*{username}"
+                   readonly
+                   th:classappend="${#fields.hasErrors('username')} ? 'is-invalid'"/>
+            <div class="invalid-feedback" th:errors="*{username}"></div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" th:text="#{user.label.email}">Email</label>
+            <input class="form-control"
+                   th:field="*{email}"
+                   th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'"/>
+            <div class="invalid-feedback" th:errors="*{email}"></div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" th:text="#{user.label.phone}">Phone</label>
+            <input class="form-control" th:field="*{phone}"/>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" th:text="#{user.label.role}">Role</label>
+            <select class="form-select"
+                    th:field="*{role}"
+                    th:classappend="${#fields.hasErrors('role')} ? 'is-invalid'">
+                <option th:value="ROLE_USER">USER</option>
+                <option th:value="ROLE_ADMIN">ADMIN</option>
+            </select>
+            <div class="invalid-feedback" th:errors="*{role}"></div>
+        </div>
+
+
+        <div class="mt-3">
+            <button class="btn btn-dark btn-sm" th:text="#{action.save}">Save</button>
+            <a
+                th:href="@{/admin/users}"
+                class="btn btn-outline-secondary btn-sm ms-2"
+                th:text="#{action.cancel}">Cancel</a>
+        </div>
+    </form>
+
+
+    </section>
+</body>
+</html>

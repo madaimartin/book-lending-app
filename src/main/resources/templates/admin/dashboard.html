@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/layout :: layout(
+            ~{layout/admin-layout :: adminLayout(~{::section}, #{title.dashboard})},
+            #{title.dashboard}
+      )}">
+
+<section>
+    <h2 th:text="#{title.dashboard}">Admin Dashboard</h2>
+</section>
+
+</html>

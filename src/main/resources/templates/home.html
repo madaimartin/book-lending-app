@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/layout :: layout(
+            ~{::section},
+            #{home.title}
+      )}">
+
+<section>
+    <div class="text-center">
+        <h1 class="mb-3" th:text="#{home.title}">Book Lending App</h1>
+        <p class="lead">
+            <span th:text="#{home.welcome}">Welcome</span>,
+            <strong th:text="${username}">username</strong>
+        </p>
+    </div>
+</section>
+
+</html>

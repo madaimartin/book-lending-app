@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/layout :: layout(
+            ~{layout/admin-layout :: adminLayout(~{::section}, #{title.admin.loans})},
+            #{title.admin.loans}
+      )}">
+<body>
+<section class="container">
+
+    <h3 class="mb-4" th:text="#{title.admin.loans}">All Loans</h3>
+
+    <div th:if="${flashMessage}" class="alert alert-success"
+         th:text="#{${flashMessage}}"></div>
+
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th th:text="#{loan.table.user}">User</th>
+                <th th:text="#{loan.table.book}">Book</th>
+                <th th:text="#{loan.table.barcode}">Barcode</th>
+                <th th:text="#{loan.table.loanDate}">Loan</th>
+                <th th:text="#{loan.table.dueDate}">Due</th>
+                <th th:text="#{loan.table.status}">Status</th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="l : ${loans}">
+            <td th:text="${l.username}"></td>
+
+            <td>
+                <strong th:text="${l.title}"></strong><br/>
+                <small th:text="${l.author}"></small>
+            </td>
+
+            <td th:text="${l.barcode}"></td>
+
+            <td th:text="${#temporals.format(l.loanDate, 'yyyy-MM-dd HH:mm')}"></td>
+            <td th:text="${#temporals.format(l.dueDate, 'yyyy-MM-dd')}"></td>
+
+            <td>
+                <span class="badge bg-success"
+                      th:if="${l.status.name() == 'ACTIVE'}"
+                      th:text="#{loan.status.ACTIVE}"></span>
+                <span class="badge bg-danger"
+                      th:if="${l.status.name() == 'OVERDUE'}"
+                      th:text="#{loan.status.OVERDUE}"></span>
+                <span class="badge bg-secondary"
+                      th:if="${l.status.name() == 'RETURNED'}"
+                      th:text="#{loan.status.RETURNED}"></span>
+            </td>
+
+            <td class="text-end">
+                <form th:if="${l.status.name() != 'RETURNED'}"
+                      th:action="@{/loans/{id}/return(id=${l.loanId})}"
+                      method="post">
+                    <button class="btn btn-success btn-sm">
+                        <i class="bi bi-arrow-return-left"></i>
+                        <span th:text="#{action.return}">Return</span>
+                    </button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</section>
+</body>
+</html>

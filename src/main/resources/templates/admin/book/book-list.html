@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/layout :: layout(
+            ~{layout/admin-layout :: adminLayout(~{::section}, #{title.admin.books})},
+            #{title.admin.books}
+      )}">
+<body>
+<section>
+    <h3 th:text="#{title.admin.books}">Books</h3>
+    <a th:href="@{/books/new}" class="btn btn-primary mb-3" th:text="#{action.add.book}">Add Book</a>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th th:text="#{book.label.title}">Title</th>
+            <th th:text="#{book.label.author}">Author</th>
+            <th th:text="#{book.label.isbn}">ISBN</th>
+            <th th:text="#{book.label.publisher}">Publisher</th>
+            <th th:text="#{book.label.publishedYear}">Year</th>
+            <th th:text="#{book.label.categories}">Categories</th>
+            <th th:text="#{label.actions}">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="book : ${books}">
+            <td th:text="${book.title}"></td>
+            <td th:text="${book.author}"></td>
+            <td th:text="${book.isbn}"></td>
+            <td th:text="${book.publisher}"></td>
+            <td th:text="${book.publishedYear}"></td>
+            <td th:text="${book.getCategoryNames}"></td>
+            <td>
+                <a th:href="@{/books/{id}/edit(id=${book.id})}"
+                   class="btn btn-sm btn-outline-primary"
+                   th:text="#{action.edit}">Edit</a>
+                <form th:action="@{/books/{id}/delete(id=${book.id})}" method="post" class="d-inline">
+                    <!--
+                    <button class="btn btn-sm btn-outline-danger" th:text="#{action.delete}">Delete</button>
+                    -->
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+</body>
+</html>
